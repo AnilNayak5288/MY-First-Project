@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movies App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    #movies-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      padding: 20px;
+    }
+
+    .movie-card {
+      width: 250px;
+      background-color: #fff;
+      margin: 10px;
+      padding: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    input[type="text"] {
+      border: 1px solid #ccc;
+    }
+
+    select {
+      border: 1px solid #ccc;
+      background-color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Movies App</h1>
+    <input type="text" id="search-input" placeholder="Search by title...">
+    <select id="genre-filter">
+      <option value="">Filter by genre...</option>
+      <option value="Action">Action</option>
+      <option value="Comedy">Comedy</option>
+      <option value="Drama">Drama</option>
+      <!-- Add more genres here -->
+    </select>
+    <select id="year-filter">
+      <option value="">Filter by release year...</option>
+      <!-- Add years dynamically using JavaScript -->
+    </select>
+  </header>
+
+  <div id="movies-container"></div>
+
+  <script>
+    // Sample movie data
+    const movies = [
+      { title: "Inception", genre: "Action", year: 2010 },
+      { title: "The Shawshank Redemption", genre: "Drama", year: 1994 },
+      { title: "The Dark Knight", genre: "Action", year: 2008 },
+      { title: "Pulp Fiction", genre: "Drama", year: 1994 },
+      // Add more movie objects here
+    ];
+
+    // Function to display movies
+    function displayMovies(movies) {
+      const container = document.getElementById('movies-container');
+      container.innerHTML = '';
+      movies.forEach(movie => {
+        const card = document.createElement('div');
+        card.classList.add('movie-card');
+        card.innerHTML = `
+          <h3>${movie.title}</h3>
+          <p>Genre: ${movie.genre}</p>
+          <p>Year: ${movie.year}</p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Function to filter movies
+    function filterMovies() {
+      const searchText = document.getElementById('search-input').value.toLowerCase();
+      const genreFilter = document.getElementById('genre-filter').value;
+      const yearFilter = document.getElementById('year-filter').value;
+
+      let filteredMovies = movies.filter(movie => {
+        return movie.title.toLowerCase().includes(searchText) &&
+               (genreFilter === '' || movie.genre === genreFilter) &&
+               (yearFilter === '' || movie.year == yearFilter);
+      });
+
+      displayMovies(filteredMovies);
+    }
+
+    // Populate the years in the filter dropdown
+    function populateYearFilter() {
+      const yearFilter = document.getElementById('year-filter');
+      const years = new Set(movies.map(movie => movie.year));
+      years.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearFilter.appendChild(option);
+      });
+    }
+
+    // Initial setup
+    displayMovies(movies);
+    populateYearFilter();
+
+    // Event listeners
+    document.getElementById('search-input').addEventListener('input', filterMovies);
+    document.getElementById('genre-filter').addEventListener('change', filterMovies);
+    document.getElementById('year-filter').addEventListener('change', filterMovies);
+  </script>
+</body>
+</html>
